@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creative Lab | EduStream Multimedia Learning Hub</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
 
     <style>
         /* 🔄 1. LOADING SPINNER */
@@ -109,6 +113,9 @@
                         <a class="nav-link" href="index.html">Home</a>
                     </li>
                     <li class="nav-item">
+                    <a class="nav-link active" href="animations.html">Animations</a>
+                </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="audio-player.html">Audio Player</a>
                     </li>
 
@@ -165,6 +172,9 @@
 
     <video id="video" autoplay playsinline muted></video>
     <canvas id="canvas"></canvas>
+        <footer class="bg-dark p-3">
+        <p class="text-center text-white">Kennedy Ndung'u | INF 424</p>
+    </footer>
     <script src="styles.js"></script>
     <script>
         const video = document.getElementById("video");
