@@ -1,11 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Audio Player | EduStream Multimedia Learning Hub</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">EduStream</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mynavbar">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="animations.html">Animations</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="gallery.html">Gallery</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="video-player.html">Video Player</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="player container mt-5">
+        <h2 class="text-success">EduStream Lecture Audio</h2>
+        <audio id="audio" src="assets/audio/education.mp3"></audio>
+
+        <!-- Controls -->
+        <button class="btn btn-primary" id="playBtn">Play</button>
+        <button class="btn btn-secondary" id="muteBtn">Mute</button>
+
+        <p id="time">0:00 / 0:00</p>
+
+        <!-- Progress -->
+        <input type="range" id="progress" value="0" min="0" max="100">
+
+        <!-- Volume -->
+        <label>Volume</label>
+        <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
+
+        <!-- Status -->
+        <p class="status" id="status">Status: Idle</p>
+    </div>
+    <script src="styles.js"></script>
+    <script>
+        const audio = document.getElementById("audio");
+        const playBtn = document.getElementById("playBtn");
+        const muteBtn = document.getElementById("muteBtn");
+        const progress = document.getElementById("progress");
+        const volume = document.getElementById("volume");
+        const timeDisplay = document.getElementById("time");
+        const status = document.getElementById("status");
+
+        // Format time (M:SS)
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return mins + ":" + (secs < 10 ? "0" + secs : secs);
+        }
+
+        // Play / Pause
+        playBtn.addEventListener("click", () => {
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        });
+
+        // Update button text
+        audio.addEventListener("play", () => {
+            playBtn.textContent = "Pause";
+        });
+
+        audio.addEventListener("pause", () => {
+            playBtn.textContent = "Play";
+        });
+
+        audio.addEventListener("ended", () => {
+            playBtn.textContent = "Replay";
+        });
+
+        // Progress update
+        audio.addEventListener("timeupdate", () => {
+            const percent = (audio.currentTime / audio.duration) * 100;
+            progress.value = percent;
+
+            timeDisplay.textContent =
+                formatTime(audio.currentTime) + " / " + formatTime(audio.duration);
+        });
+
+        // Seek
+        progress.addEventListener("input", () => {
+            const time = (progress.value / 100) * audio.duration;
+            audio.currentTime = time;
+        });
+
+        // Volume
+        volume.addEventListener("input", () => {
+            audio.volume = volume.value;
+        });
+
+        // Mute toggle
+        muteBtn.addEventListener("click", () => {
+            audio.muted = !audio.muted;
+            muteBtn.textContent = audio.muted ? "Unmute" : "Mute";
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener("keydown", (e) => {
+            if (e.code === "Space") {
+                e.preventDefault();
+                audio.paused ? audio.play() : audio.pause();
+            }
+
+            if (e.key.toLowerCase() === "m") {
+                audio.muted = !audio.muted;
+                muteBtn.textContent = audio.muted ? "Unmute" : "Mute";
+            }
+
+            if (e.key === "ArrowRight") {
+                audio.currentTime += 10;
+            }
+
+            if (e.key === "ArrowLeft") {
+                audio.currentTime -= 10;
+            }
+        });
+
+        // Event feedback
+        audio.addEventListener("loadstart", () => {
+            status.textContent = "Status: Loading...";
+        });
+
+        audio.addEventListener("loadeddata", () => {
+            status.textContent = "Status: Ready to play";
+        });
+
+        audio.addEventListener("waiting", () => {
+            status.textContent = "Status: Buffering...";
+        });
+
+        audio.addEventListener("play", () => {
+            status.textContent = "Status: Playing";
+        });
+
+        audio.addEventListener("pause", () => {
+            status.textContent = "Status: Paused";
+        });
+
+        audio.addEventListener("ended", () => {
+            status.textContent = "Status: Playback ended";
+        });
+
+        audio.addEventListener("error", () => {
+            status.textContent = "Status: Error loading audio";
+        });
+    </script>
 </body>
+
 </html>
