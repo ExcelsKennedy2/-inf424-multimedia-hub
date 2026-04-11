@@ -54,6 +54,27 @@
         <!-- Status -->
         <p class="status" id="status">Status: Idle</p>
     </div>
+
+    <hr>
+
+<h3>Tone Generator (Web Audio API)</h3>
+
+<label>Waveform:</label>
+<select id="waveform">
+    <option value="sine">Sine</option>
+    <option value="square">Square</option>
+    <option value="sawtooth">Sawtooth</option>
+    <option value="triangle">Triangle</option>
+</select>
+
+<br><br>
+
+<button onclick="playTone(261.63)">C4</button>
+<button onclick="playTone(293.66)">D4</button>
+<button onclick="playTone(329.63)">E4</button>
+<button onclick="playTone(440)">A4</button>
+
+<p id="toneStatus">Tone: Idle</p>
     <script src="styles.js"></script>
     <script>
         const audio = document.getElementById("audio");
@@ -168,6 +189,48 @@
         audio.addEventListener("error", () => {
             status.textContent = "Status: Error loading audio";
         });
+        let audioCtx = null;
+
+// Lazy initialization (ONLY when user interacts)
+function initAudioContext() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        document.getElementById("toneStatus").textContent = "Tone: AudioContext initialized";
+    }
+}
+
+function playTone(frequency) {
+    initAudioContext();
+
+    const waveform = document.getElementById("waveform").value;
+
+    const oscillator = audioCtx.createOscillator();
+    const gainNode = audioCtx.createGain();
+
+    oscillator.type = waveform;
+    oscillator.frequency.value = frequency;
+
+    // Connect nodes: Oscillator → Gain → Output
+    oscillator.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    const now = audioCtx.currentTime;
+
+    // Smooth envelope (prevents clicking)
+    gainNode.gain.setValueAtTime(0, now);
+
+    // Attack (10ms)
+    gainNode.gain.linearRampToValueAtTime(0.5, now + 0.01);
+
+    // Release (600ms)
+    gainNode.gain.linearRampToValueAtTime(0, now + 0.61);
+
+    oscillator.start(now);
+    oscillator.stop(now + 0.62);
+
+    document.getElementById("toneStatus").textContent =
+        `Tone: Playing ${frequency} Hz (${waveform})`;
+}
     </script>
 </body>
 
