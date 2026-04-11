@@ -3,9 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Media Gallery | EduStream Multimedia Learning Hub</title>
+    <link rel="stylesheet" href="style.css">
+
+<style>
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.media-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.badge.video { background: blue; color: white; }
+.badge.audio { background: green; color: white; }
+.badge.image { background: orange; color: white; }
+
+img {
+    width: 100%;
+    border-radius: 10px;
+}
+</style>
 </head>
+
 <body>
-    
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">EduStream</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mynavbar">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="audio-player.html">Audio Player</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="gallery.html">Gallery</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="video-player.html">Video Player</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<h2>EduStream Media Gallery</h2>
+
+<input type="text" id="search" placeholder="Search media...">
+
+<div id="gallery" class="gallery"></div>
+
+<script>
+const mediaLibrary = [
+    {id:1,title:"Lecture Audio",type:"audio",thumbnail:"thumb1.jpg",duration:"3:00",description:"Audio lecture"},
+    {id:2,title:"Tutorial Video",type:"video",thumbnail:"thumb2.jpg",duration:"5:00",description:"Video tutorial"},
+    {id:3,title:"Study Image",type:"image",thumbnail:"thumb3.jpg",duration:null,description:"Image"},
+    {id:4,title:"Animation Demo",type:"video",thumbnail:"thumb4.jpg",duration:"2:30",description:"Animation"},
+    {id:5,title:"Podcast",type:"audio",thumbnail:"thumb5.jpg",duration:"10:00",description:"Podcast"},
+    {id:6,title:"Diagram",type:"image",thumbnail:"thumb6.jpg",duration:null,description:"Diagram"},
+    {id:7,title:"Class Recording",type:"video",thumbnail:"thumb7.jpg",duration:"7:00",description:"Class"},
+    {id:8,title:"Sound Clip",type:"audio",thumbnail:"thumb8.jpg",duration:"1:20",description:"Clip"}
+];
+
+// PURE FUNCTION
+function renderMediaCard(item){
+    return `
+    <div class="media-card" data-id="${item.id}" data-title="${item.title}" data-type="${item.type}">
+        <img src="${item.thumbnail}" alt="${item.title}">
+        <h3>${item.title}</h3>
+        <span class="badge ${item.type}">${item.type}</span>
+        <p>${item.duration ? item.duration : ""}</p>
+        <button>${item.type === "image" ? "View" : "Play"}</button>
+    </div>`;
+}
+
+// Render
+function displayMedia(data){
+    document.getElementById("gallery").innerHTML = data.map(renderMediaCard).join("");
+}
+
+displayMedia(mediaLibrary);
+
+// Search
+document.getElementById("search").addEventListener("input", e=>{
+    const filtered = mediaLibrary.filter(item =>
+        item.title.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    displayMedia(filtered);
+});
+
+// Event Delegation
+document.getElementById("gallery").addEventListener("click", e=>{
+    const card = e.target.closest(".media-card");
+    if(card){
+        console.log(card.dataset.id, card.dataset.title, card.dataset.type);
+    }
+});
+</script>
+
 </body>
 </html>
