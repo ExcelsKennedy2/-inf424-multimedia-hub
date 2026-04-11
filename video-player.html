@@ -1,11 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Video | EduStream Multimedia Learning Hub </title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">EduStream</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mynavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mynavbar">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="animations.html">Animations</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="gallery.html">Gallery</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="audio-player.html">Audio Player</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="video-player container mt-5">
+
+        <h2>EduStream Tutorial Video</h2>
+
+        <!-- Video (NO controls attribute) -->
+        <video id="video" poster="assets/images/poster.png">
+            <source src="assets/video/education.mp4" type="video/mp4">
+            Your browser does not support video.
+        </video>
+
+        <!-- Controls -->
+        <button class="btn btn-primary" id="playBtn">Play</button>
+        <button class="btn btn-secondary" id="fullscreenBtn">Fullscreen</button>
+        <form class="form-control">
+            <select id="speed">
+                <option value="0.75">0.75x</option>
+                <option value="1" selected>1x</option>
+                <option value="1.25">1.25x</option>
+                <option value="1.5">1.5x</option>
+                <option value="2">2x</option>
+            </select>
+
+            <p id="time">0:00 / 0:00</p>
+
+            <!-- Seek -->
+            <input type="range" id="progress" value="0" min="0" max="100">
+
+            <!-- Status -->
+            <p class="status" id="status">Status: Idle</p>
+        </form>
+        <!-- Transcript -->
+        <div class="transcript">
+            This video shows an interactive classroom session in a school environment where students actively
+            participate in learning activities guided by a teacher. The teacher engages learners through questions,
+            demonstrations, and collaborative discussion, encouraging them to think critically and respond confidently.
+            Students are seen raising their hands, contributing ideas, and interacting with both the teacher and their
+            peers. The classroom atmosphere reflects a modern, student-centered approach to education, where technology
+            and communication play an important role in enhancing understanding. The session highlights how multimedia
+            elements, such as visual aids and real-time interaction, support effective teaching and improve student
+            engagement in contemporary learning environments.
+        </div>
+
+    </div>
+
+    <script src="styles.js"></script>
+    <script>
+        const video = document.getElementById("video");
+        const playBtn = document.getElementById("playBtn");
+        const progress = document.getElementById("progress");
+        const timeDisplay = document.getElementById("time");
+        const speed = document.getElementById("speed");
+        const fullscreenBtn = document.getElementById("fullscreenBtn");
+        const status = document.getElementById("status");
+
+        // Format time
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return mins + ":" + (secs < 10 ? "0" + secs : secs);
+        }
+
+        // Play / Pause
+        playBtn.addEventListener("click", () => {
+            if (video.paused) {
+                video.play();
+            } else {
+                video.pause();
+            }
+        });
+
+        // Update button
+        video.addEventListener("play", () => {
+            playBtn.textContent = "Pause";
+            status.textContent = "Status: Play triggered (play event)";
+        });
+
+        video.addEventListener("playing", () => {
+            status.textContent = "Status: Video is now playing (playing event)";
+        });
+
+        video.addEventListener("pause", () => {
+            playBtn.textContent = "Play";
+            status.textContent = "Status: Paused";
+        });
+
+        video.addEventListener("ended", () => {
+            playBtn.textContent = "Replay";
+            status.textContent = "Status: Video ended";
+        });
+
+        // Progress
+        video.addEventListener("timeupdate", () => {
+            const percent = (video.currentTime / video.duration) * 100;
+            progress.value = percent;
+
+            timeDisplay.textContent =
+                formatTime(video.currentTime) + " / " + formatTime(video.duration);
+        });
+
+        // Seek
+        progress.addEventListener("input", () => {
+            const time = (progress.value / 100) * video.duration;
+            video.currentTime = time;
+        });
+
+        // Speed control
+        speed.addEventListener("change", () => {
+            video.playbackRate = speed.value;
+        });
+
+        // Fullscreen
+        fullscreenBtn.addEventListener("click", () => {
+            video.requestFullscreen();
+        });
+
+        // Waiting (buffering)
+        video.addEventListener("waiting", () => {
+            status.textContent = "Status: Buffering...";
+        });
+
+        // Error
+        video.addEventListener("error", () => {
+            status.textContent = "Status: Error loading video";
+        });
+    </script>
 </body>
+
 </html>

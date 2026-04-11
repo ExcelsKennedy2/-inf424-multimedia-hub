@@ -92,6 +92,43 @@ input[type="range"] {
     color: #555;
 }
 
+.video-player {
+    max-width: 700px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+video {
+    width: 100%;
+    border-radius: 10px;
+}
+
+button, select {
+    margin: 5px;
+    padding: 8px;
+    cursor: pointer;
+}
+
+input[type="range"] {
+    width: 100%;
+}
+
+.status {
+    margin-top: 10px;
+    color: #555;
+}
+
+.transcript {
+    margin-top: 20px;
+    font-size: 14px;
+    background: #fafafa;
+    padding: 10px;
+    border-radius: 5px;
+}
+
 .svg-section h2{
 font-weight: 700;
 }
